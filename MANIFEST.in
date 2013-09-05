@@ -1,0 +1,2 @@
+include COPYING *.rst
+global-exclude *~ *.pyc
