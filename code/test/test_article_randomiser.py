@@ -1,7 +1,7 @@
 # L. Amber Wilcox-O'Hearn 2011
-# test_ArticleRandomiser.py
+# test_article_randomiser.py
 
-from code.preprocessing import ArticleRandomiser
+from code import article_randomiser
 import unittest, StringIO, random
 
 
@@ -10,6 +10,8 @@ class ArticleRandomiserTest(unittest.TestCase):
     def test_randomise(self):
 
         r = random.Random(999)
+
+        article_separation_line = "---END.OF.DOCUMENT---\n"
 
         a1 = ["Anarchism.\n", "Anarchism is a political philosophy which considers the state undesirable, unnecessary and harmful, and instead promotes a stateless society, or anarchy. It seeks to diminish or even abolish authority in the conduct of human relations. Anarchists may widely disagree on what additional criteria are required in anarchism. \"The Oxford Companion to Philosophy\" says, \"there is no single defining position that all anarchists hold, and those considered anarchists at best share a certain family resemblance.\"", "---END.OF.DOCUMENT---\n"]
         a2 = ["Hidehiko Shimizu.\n", "Hidehiko Shimizu (born 4 November 1954) is a former Japanese football player. He has played for Nissan Motors.\n", "---END.OF.DOCUMENT---\n"]
@@ -24,7 +26,7 @@ class ArticleRandomiserTest(unittest.TestCase):
         devel_file_obj = StringIO.StringIO()
         test_file_obj = StringIO.StringIO()
 
-        ar = ArticleRandomiser.Randomiser(article_file_obj, train_file_obj, devel_file_obj, test_file_obj, r)
+        ar = article_randomiser.Randomiser(article_file_obj, article_separation_line, train_file_obj, devel_file_obj, test_file_obj, [train_proportion, devel_proportion, test_proportion], r)
         ar.randomise()
         assert train_file_obj.getvalue() == "".join(a2+a4), "".join(a2+a4) + train_file_obj.getvalue()
         assert devel_file_obj.getvalue() == "".join(a1), "".join(a1) + devel_file_obj.getvalue()
