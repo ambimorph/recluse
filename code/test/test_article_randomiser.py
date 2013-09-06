@@ -2,7 +2,7 @@
 # test_article_randomiser.py
 
 from code import article_randomiser
-import unittest, StringIO, random
+import unittest, StringIO, random, subprocess, bz2, os
 
 
 class ArticleRandomiserTest(unittest.TestCase):
@@ -26,11 +26,27 @@ class ArticleRandomiserTest(unittest.TestCase):
         devel_file_obj = StringIO.StringIO()
         test_file_obj = StringIO.StringIO()
 
-        ar = article_randomiser.Randomiser(article_file_obj, article_separation_line, train_file_obj, devel_file_obj, test_file_obj, [train_proportion, devel_proportion, test_proportion], r)
+        ar = article_randomiser.Randomiser(article_file_obj, train_file_obj, devel_file_obj, test_file_obj, r)
         ar.randomise()
         assert train_file_obj.getvalue() == "".join(a2+a4), "".join(a2+a4) + train_file_obj.getvalue()
         assert devel_file_obj.getvalue() == "".join(a1), "".join(a1) + devel_file_obj.getvalue()
         assert test_file_obj.getvalue() == "".join(a3),  "".join(a3) + test_file_obj.getvalue() 
+
+    def test_command_line(self):
+
+        randomize = subprocess.Popen(['python', 'code/article_randomiser.py', "---END.OF.DOCUMENT---", '.5', '.3', '.2'], stdin=-1, stdout=-1, stderr=-1 )
+        test_data_reader = bz2.BZ2File('code/test/data/small_westbury.txt.bz2', 'r')
+        randomize.communicate(input=test_data_reader.read())
+        self.assertEqual(randomize.returncode, 0)
+        num_train = subprocess.Popen(['grep', '-c', 'END', 'train'], stdout=-1)
+        self.assertEqual(int(num_train.stdout.read()), 11), num_train
+        num_devel = subprocess.Popen(['grep', '-c', 'END', 'devel'], stdout=-1)
+        self.assertEqual(int(num_devel.stdout.read()), 5), num_devel
+        num_test = subprocess.Popen(['grep', '-c', 'END', 'test'], stdout=-1)
+        self.assertEqual(int(num_test.stdout.read()), 2), num_test
+        os.remove('train')
+        os.remove('devel')
+        os.remove('test')
 
 if __name__ == '__main__':
     unittest.main()
