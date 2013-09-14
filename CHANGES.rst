@@ -2,6 +2,13 @@
 RECLUSE
 =========
 
+Release 0.1.4 (2013-09-14)
+..........................
+* Little typographical fixes.
+
+Release 0.1.3 (2013-09-14)
+..........................
+* Little typographical fixes.
 
 Release 0.1.2 (2013-09-14)
 ..........................
