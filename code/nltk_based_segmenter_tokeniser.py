@@ -6,16 +6,42 @@ import re, sys, codecs, unicodedata, string
 
 class NLTKBasedSegmenterTokeniser():
 
+    """
+    This Segementer/Tokeniser is customised in the following ways:
+
+    1. It has parameters optimised for Wikipedia text (i.e. text that
+    is inconsistent in its spelling of abbreviations, has an immense
+    vocabulary, and is stylistically diverse and non-standard).
+
+    2. This version replaces strings of digits with a special string
+    that has only a digit count. TODO: make this optional.
+
+    3. It has a mode that emits lists of boundary positions and token
+    replacements rather than putting out transformed text, in order to
+    preserve the original.  EXCEPTION: note that in this version
+    non-linebreaking whitespace is always collapsed to a single space,
+    however, which violates complete reversibility.
+
+    4. This version always starts by training on the supplied text.
+    New text can also be supplied after the training (though this is
+    not yet tested), but the training is not currenty loadable or
+    savable.
+
+    """
+
     def __init__(self, infile_obj):
         self.unicode_infile_obj = codecs.getreader('utf-8')(infile_obj)
         self.text = self.unicode_infile_obj.read()
         assert isinstance(self.text, unicode)
         assert len(self.text) > 0
         trainer = nltk.tokenize.punkt.PunktTrainer()
+        # The following are optimisations recommended by NLTK
+        # developers for Wikipedia:
         trainer.ABBREV = .15
         trainer.IGNORE_ABBREV_PENALTY = True
         trainer.INCLUDE_ALL_COLLOCS = True
         trainer.MIN_COLLOC_FREQ = 10
+        # ---------------------------------------------------
         trainer.train(self.text)
         self.sbd = nltk.tokenize.punkt.PunktSentenceTokenizer(trainer.get_params())
 
@@ -188,6 +214,13 @@ class NLTKBasedSegmenterTokeniser():
                     
 
     def segmented_and_tokenised(self, text=None, output_file_obj=None):
+        """
+        This function creates a generator, to avoid storing in RAM.
+        If text is not supplied, the training text itself is used.
+        If output_file_obj is supplied, the text is put out to that
+        file with spaces inserted at the boundaries, and digit strings
+        replaced with special tokens.
+        """
         assert text is None or isinstance(text, unicode), text
         if text == None: text = self.text
         for line in (t for t in text.split('\n')):
