@@ -10,12 +10,12 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
     
     @classmethod
     def setUpClass(self):
-        training_text_file = open('code/test/segmenter_training', 'r')
+        training_text_file = open('code/test/data/segmenter_training', 'r')
         self.segmenter_tokeniser = nltk_based_segmenter_tokeniser.NLTKBasedSegmenterTokeniser(training_text_file)
 
     def run_assertions(self, text_to_segment_tokenise, expected_list_of_tuple_output, expected_text_output):
         
-        training_text_file = open('code/test/segmenter_training', 'r')
+        training_text_file = open('code/test/data/segmenter_training', 'r')
         out_file_obj = StringIO.StringIO()
         tuple_generator = self.segmenter_tokeniser.segmented_and_tokenised(text_to_segment_tokenise, out_file_obj)
         list_output = [x for x in tuple_generator]
