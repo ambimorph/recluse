@@ -3,7 +3,7 @@
 # These are essentially all regression tests.
 
 from code import nltk_based_segmenter_tokeniser
-import unittest, StringIO
+import unittest, StringIO, subprocess
 
 
 class SegmenterAndTokeniserTest(unittest.TestCase):
@@ -213,6 +213,12 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
         expected_list_of_tuple_output = [(u'Don\'t keep this together: -suffix', [5, 6, 10, 11, 15, 16, 24, 25, 26, 27], [])]
         expected_text_output = 'don\'t keep this together : - suffix\n'
         self.run_assertions(text_to_segment_tokenise, expected_list_of_tuple_output, expected_text_output)
+
+    def test_commandline(self):
+        segment_and_tokenise = subprocess.Popen(['python', 'code/nltk_based_segmenter_tokeniser.py'], stdin=-1, stdout=-1, stderr=-1)
+        (stdoutdata, stderrdata) = segment_and_tokenise.communicate(input="this's a test\" and. so is 1984.")
+        self.assertEqual(segment_and_tokenise.returncode, 0)
+        self.assertEqual(stdoutdata, 'this\'s a test " and .\nso is <4-digit-integer> .\n'), stdoutdata
 
 
 if __name__ == '__main__':
