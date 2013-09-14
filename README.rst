@@ -16,7 +16,7 @@ This version contains
 
 * utils, which has a function for reading and writing unicode with regular or compressed text.
 * article_randomiser, which reproducibly randomly divides a corpus into training, development, and test sets.
-* nltk_based_segmenter_tokeniser, which does sentence segmentation and and tokenisation.
+* nltk_based_segmenter_tokeniser, which does sentence segmentation and word tokenisation.
   It is optimised for Wikipedia type text, and it has a mode that preserves the untokenised text (modulo extra whitespace).
 
 
