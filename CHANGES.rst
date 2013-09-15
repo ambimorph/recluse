@@ -2,6 +2,10 @@
 RECLUSE
 =========
 
+Release 0.1.5 (2013-09-15)
+..........................
+* Added vocabulary building tools: vocabulary_cutter and vocabulary_generator.
+
 Release 0.1.4 (2013-09-14)
 ..........................
 * Little typographical fixes.

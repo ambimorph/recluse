@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='recluse',
-      version='0.1.4',
+      version='0.1.5',
       description='Reproducible Experimentation for Computational Linguistics Use',
       long_description=open('README.rst').read(),
       author='L. Amber Wilcox-O\'Hearn',
