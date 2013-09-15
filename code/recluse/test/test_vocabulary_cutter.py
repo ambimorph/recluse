@@ -2,14 +2,14 @@
 # test_vocabulary_cutter.py
 
 import unittest, StringIO, subprocess
-from code import vocabulary_cutter
+from recluse import vocabulary_cutter
 
 
 class VocabularyCutterTest(unittest.TestCase):
 
     def test_cut_vocabulary(self):
 
-        infile_obj = open('code/test/data/unigram_counts', 'r')
+        infile_obj = open('recluse/test/data/unigram_counts', 'r')
         outfile_obj = StringIO.StringIO()
 
         vc = vocabulary_cutter.VocabularyCutter(infile_obj, outfile_obj)
@@ -19,8 +19,8 @@ class VocabularyCutterTest(unittest.TestCase):
 
     def test_commandline(self):
 
-        cut_vocab = subprocess.Popen(['python', 'code/vocabulary_cutter.py', '5'], stdin=-1, stdout=-1, stderr=-1)
-        infile_obj = open('code/test/data/unigram_counts', 'r')
+        cut_vocab = subprocess.Popen(['python', 'recluse/vocabulary_cutter.py', '5'], stdin=-1, stdout=-1, stderr=-1)
+        infile_obj = open('recluse/test/data/unigram_counts', 'r')
         (stdoutdata, stderrdata) = cut_vocab.communicate(input=infile_obj.read())
         self.assertEqual(cut_vocab.returncode, 0)
         self.assertEqual(stdoutdata, "being\nheld\nGer\ndeficits\nChris\n")

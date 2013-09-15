@@ -1,7 +1,7 @@
 # L. Amber Wilcox-O'Hearn 2011
 # test_article_randomiser.py
 
-from code import article_randomiser
+from recluse import article_randomiser
 import unittest, StringIO, random, subprocess, bz2, os
 
 
@@ -34,8 +34,8 @@ class ArticleRandomiserTest(unittest.TestCase):
 
     def test_command_line(self):
 
-        randomize = subprocess.Popen(['python', 'code/article_randomiser.py', "---END.OF.DOCUMENT---", '.5', '.3', '.2'], stdin=-1, stdout=-1, stderr=-1 )
-        test_data_reader = bz2.BZ2File('code/test/data/small_westbury.txt.bz2', 'r')
+        randomize = subprocess.Popen(['python', 'recluse/article_randomiser.py', "---END.OF.DOCUMENT---", '.5', '.3', '.2'], stdin=-1, stdout=-1, stderr=-1 )
+        test_data_reader = bz2.BZ2File('recluse/test/data/small_westbury.txt.bz2', 'r')
         randomize.communicate(input=test_data_reader.read())
         self.assertEqual(randomize.returncode, 0)
         num_train = subprocess.Popen(['grep', '-c', 'END', 'train'], stdout=-1)

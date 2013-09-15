@@ -2,6 +2,14 @@
 RECLUSE
 =========
 
+Release 0.1.7 (2013-09-15)
+..........................
+* Fixed pathnames in tests to go along with new packaging structure.
+
+Release 0.1.6 (2013-09-15)
+..........................
+* Fixed packaging error in which the package was named 'code' instead of 'recluse'.
+
 Release 0.1.5 (2013-09-15)
 ..........................
 * Added vocabulary building tools: vocabulary_cutter and vocabulary_generator.

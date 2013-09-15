@@ -43,7 +43,7 @@ class VocabularyGenerator():
         file_names_file_obj = open(self.temporary_chunk_directory + 'file_names', 'w')
         file_names_file_obj.writelines([self.temporary_chunk_directory + s + '\n' for s in os.listdir(self.temporary_chunk_directory) if s != 'file_names'])
         file_names_file_obj.close()
-        srilm_make_batch_counts = subprocess.call(['make-batch-counts', self.temporary_chunk_directory + 'file_names', '1', 'code/nltkbasedsegmentandtokenise.sh', self.temporary_counts_directory, '-write-order 1'])
+        srilm_make_batch_counts = subprocess.call(['make-batch-counts', self.temporary_chunk_directory + 'file_names', '1', 'recluse/nltkbasedsegmentandtokenise.sh', self.temporary_counts_directory, '-write-order 1'])
         srilm_merge_batch_counts = subprocess.call(['merge-batch-counts', self.temporary_counts_directory])
 
     def generate_vocabulary(self, text_file_name, size, vocabulary_file_obj):

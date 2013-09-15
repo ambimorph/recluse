@@ -2,7 +2,7 @@
 
 # These are essentially all regression tests.
 
-from code import nltk_based_segmenter_tokeniser
+from recluse import nltk_based_segmenter_tokeniser
 import unittest, StringIO, subprocess
 
 
@@ -10,12 +10,12 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
     
     @classmethod
     def setUpClass(self):
-        training_text_file = open('code/test/data/segmenter_training', 'r')
+        training_text_file = open('recluse/test/data/segmenter_training', 'r')
         self.segmenter_tokeniser = nltk_based_segmenter_tokeniser.NLTKBasedSegmenterTokeniser(training_text_file)
 
     def run_assertions(self, text_to_segment_tokenise, expected_list_of_tuple_output, expected_text_output):
         
-        training_text_file = open('code/test/data/segmenter_training', 'r')
+        training_text_file = open('recluse/test/data/segmenter_training', 'r')
         out_file_obj = StringIO.StringIO()
         tuple_generator = self.segmenter_tokeniser.segmented_and_tokenised(text_to_segment_tokenise, out_file_obj)
         list_output = [x for x in tuple_generator]
@@ -215,7 +215,7 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
         self.run_assertions(text_to_segment_tokenise, expected_list_of_tuple_output, expected_text_output)
 
     def test_commandline(self):
-        segment_and_tokenise = subprocess.Popen(['python', 'code/nltk_based_segmenter_tokeniser.py'], stdin=-1, stdout=-1, stderr=-1)
+        segment_and_tokenise = subprocess.Popen(['python', 'recluse/nltk_based_segmenter_tokeniser.py'], stdin=-1, stdout=-1, stderr=-1)
         (stdoutdata, stderrdata) = segment_and_tokenise.communicate(input="this's a test\" and. so is 1984.")
         self.assertEqual(segment_and_tokenise.returncode, 0)
         self.assertEqual(stdoutdata, 'this\'s a test " and .\nso is <4-digit-integer> .\n'), stdoutdata
