@@ -28,7 +28,7 @@ class VocabularyGeneratorTest(unittest.TestCase):
     def test_command_line(self):
         generate_vocab = subprocess.Popen(['python', 'recluse/vocabulary_generator.py', self.text_file_name, str(self.size)], stdin=-1, stdout=-1, stderr=-1)
         test_data_reader = bz2.BZ2File('recluse/test/data/small_westbury.txt.bz2', 'r')
-        (stdoutdata, stderrdata) = generate_vocab.communicate(input=test_data_reader.read())
+        (stdoutdata, stderrdata) = generate_vocab.communicate()
         self.assertEqual(generate_vocab.returncode, 0)
         self.assertEqual(stdoutdata, 'the\n,\n<s>\n</s>\n.\nof\nand\nin\n"\nto\na\nis\n-\nas\nthat\n<4-digit-integer>\nfor\nwas\nwith\n)\n'), stdoutdata
         
