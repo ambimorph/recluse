@@ -2,6 +2,13 @@
 RECLUSE
 =========
 
+Release 0.1.10 (2013-09-21)
+..........................
+* Added versioneer to deal with git+pypi package management.
+* Moved the split_file_into_chunks function that had been in vocabulary_generator into utils.
+* Made unit tests for utils.py
+
+
 Release 0.1.7 (2013-09-15)
 ..........................
 * Fixed pathnames in tests to go along with new packaging structure.

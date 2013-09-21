@@ -14,7 +14,7 @@ Recluse (Reproducible Experimentation for Computational Linguistics Use) is a se
 
 This version contains 
 
-* utils, which has a function for reading and writing unicode with regular or compressed text.
+* utils, which has a function for reading and writing unicode with regular or compressed text, and a function for splitting a file into smaller pieces.  The latter is needed for some tools that load everything into RAM, or train on all the data when we would be satisfied with training on partial data.
 * article_randomiser, which reproducibly randomly divides a corpus into training, development, and test sets.
 * nltk_based_segmenter_tokeniser, which does sentence segmentation and word tokenisation.
   It is optimised for Wikipedia type text, and it has a mode that preserves the untokenised text (modulo extra whitespace).
