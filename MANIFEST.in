@@ -1,2 +1,2 @@
-include COPYING *.rst
+include COPYING *.rst versioneer.py
 global-exclude *~ *.pyc

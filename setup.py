@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+import versioneer
+
+versioneer.versionfile_build='version.py',
+versioneer.versionfile_source='code/recluse/_version.py'
+versioneer.tag_prefix = 'recluse-'
+versioneer.parentdir_prefix = 'recluse-'
+
 
 setup(name='recluse',
-      version='0.1.7',
       description='Reproducible Experimentation for Computational Linguistics Use',
       long_description=open('README.rst').read(),
       author='L. Amber Wilcox-O\'Hearn',
@@ -12,4 +18,6 @@ setup(name='recluse',
       package_dir = {'':'code'},
       packages=['recluse', 'recluse.test'],
       license='COPYING',
+      version=versioneer.get_version(),
+      cmdclass=versioneer.get_cmdclass()
      )
