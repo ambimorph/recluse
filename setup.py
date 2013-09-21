@@ -3,7 +3,7 @@
 from distutils.core import setup
 import versioneer
 
-versioneer.versionfile_build='recluse/_version.py',
+versioneer.versionfile_build='recluse/_version.py'
 versioneer.versionfile_source='code/recluse/_version.py'
 versioneer.tag_prefix = 'recluse-'
 versioneer.parentdir_prefix = 'recluse-'
