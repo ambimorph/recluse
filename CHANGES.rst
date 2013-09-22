@@ -2,12 +2,15 @@
 RECLUSE
 =========
 
+Release 0.1.13 (2013-09-22)
+..........................
+* Changed the interface and functionality of vocabulary_generator.  It no longer does splitting of large files.  Instead it takes a list of file names, and the calling function can decide whether or not to split.
+
 Release 0.1.10 (2013-09-21)
 ..........................
 * Added versioneer to deal with git+pypi package management.
 * Moved the split_file_into_chunks function that had been in vocabulary_generator into utils.
 * Made unit tests for utils.py
-
 
 Release 0.1.7 (2013-09-15)
 ..........................
