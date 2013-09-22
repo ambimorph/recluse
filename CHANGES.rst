@@ -2,7 +2,7 @@
 RECLUSE
 =========
 
-Release 0.1.13 (2013-09-22)
+Release 0.1.14 (2013-09-22)
 ..........................
 * Changed the interface and functionality of vocabulary_generator.  It no longer does splitting of large files.  Instead it takes a list of file names, and the calling function can decide whether or not to split.
 
