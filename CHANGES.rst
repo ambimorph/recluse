@@ -1,6 +1,10 @@
 =========
 RECLUSE
 =========
+Release 0.1.15 (2013-10-03
+..........................
+* vocabulary_cutter now falls back to including all words if n is greater than the original size.
+* There is now a script called nltkbasedsegmentertokeniserrunner that simply imports and runs the corresponding module.
 
 Release 0.1.14 (2013-09-22)
 ..........................
