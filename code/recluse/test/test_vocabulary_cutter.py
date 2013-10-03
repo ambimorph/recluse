@@ -17,6 +17,17 @@ class VocabularyCutterTest(unittest.TestCase):
 
         assert outfile_obj.getvalue() == "being\nheld\nGer\ndeficits\nChris\n", outfile_obj.getvalue()
 
+    def test_n_greater_than_vocab(self):
+
+        infile_obj = open('recluse/test/data/unigram_counts', 'r')
+        outfile_obj = StringIO.StringIO()
+
+        vc = vocabulary_cutter.VocabularyCutter(infile_obj, outfile_obj)
+        vc.cut_vocabulary(50)
+
+        assert outfile_obj.getvalue() == "being\nheld\nGer\ndeficits\nChris\nfocused\ndivided\nedge\nfuneral\nextra\ncontact\nadequate\ndirection\ndependence\nWestern\nholy\nexhibit\neves\ndemonstrated\nabandon\nSwedish\nArkansas\nfelon\nevocative\neducator\n", outfile_obj.getvalue()
+
+
     def test_commandline(self):
 
         cut_vocab = subprocess.Popen(['python', 'recluse/vocabulary_cutter.py', '5'], stdin=-1, stdout=-1, stderr=-1)

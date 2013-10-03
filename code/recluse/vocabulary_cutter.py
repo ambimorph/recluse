@@ -4,7 +4,9 @@ import sys, bisect
 
 class VocabularyCutter():
     """
-    Takes a file of unigram counts and returns a file of the top n most frequent words.
+    Takes a file of unigram counts and returns a file of the top n
+    most frequent words.
+    If there are fewer than n words, it returns them all.
     """
     def __init__(self, infile_obj, outfile_obj):
         self.infile_obj = infile_obj
@@ -16,6 +18,7 @@ class VocabularyCutter():
             tokens = line.split()
             assert len(tokens) == 2, line
             bisect.insort( frequencies, (int(tokens[1]), tokens[0]) )
+        n = min(n, len(frequencies))
         for i in range(n):
             self.outfile_obj.write(frequencies[-1-i][1])
             self.outfile_obj.write('\n')
