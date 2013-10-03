@@ -1,6 +1,6 @@
 # vocabulary_generator.py
 
-import subprocess, os, shutil, sys
+import subprocess, os, stat, shutil, sys
 from utils import *
 import vocabulary_cutter
 
@@ -19,8 +19,19 @@ class VocabularyGenerator():
         file_names_file_obj = open(directory + 'file_names', 'w')
         file_names_file_obj.writelines([s + '\n' for s in self.file_names])
         file_names_file_obj.close()
-        srilm_make_batch_counts = subprocess.call(['make-batch-counts', directory + 'file_names', '1', 'recluse/nltkbasedsegmentandtokenise.sh', directory, '-write-order 1'])
+
+        cwd = os.getcwd()
+
+        bash_script_name = cwd + "/nltkbasedsegmentandtokenise.sh"
+        bash_script_file_obj = open(bash_script_name, 'w')
+        bash_script_file_obj.write("bzcat $1 | nltkbasedsegmentertokeniserrunner\n")
+        bash_script_file_obj.close()
+        os.chmod(bash_script_name, 0755)
+
+        srilm_make_batch_counts = subprocess.call(['make-batch-counts', directory + 'file_names', '1', bash_script_name, directory, '-write-order 1'])
         srilm_merge_batch_counts = subprocess.call(['merge-batch-counts', directory])
+
+        os.remove(bash_script_name)
 
     def generate_vocabulary(self, size, vocabulary_file_obj):
         

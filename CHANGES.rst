@@ -1,6 +1,11 @@
 =========
 RECLUSE
 =========
+Release 0.1.20 (2013-10-03)
+..........................
+* vocabulary_generator now writes a temporary bash script for srilm to call that invokes nltkbasedsegmentertokeniserrunner.
+* The intermediate directory 'code/' has been removed.
+
 Release 0.1.19 (2013-10-03)
 ..........................
 * vocabulary_cutter now falls back to including all words if n is greater than the original size.
