@@ -1,0 +1,3 @@
+#!/usr/bin/python
+from recluse import nltk_based_segmenter_tokeniser
+nltk_based_segmenter_tokeniser.run_me()

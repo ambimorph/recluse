@@ -236,9 +236,13 @@ class NLTKBasedSegmenterTokeniser():
                     unicode_outfile_obj.write(u' '.join(self.tokenised_text(lowered_sentence_and_token_information).split()) + u'\n')
         
 
-
-if __name__ == '__main__':
-
+def run_me():
+    
     st = NLTKBasedSegmenterTokeniser(sys.stdin)
     for sti in st.segmented_and_tokenised(output_file_obj=sys.stdout):
         pass
+
+
+if __name__ == '__main__':
+
+    run_me()

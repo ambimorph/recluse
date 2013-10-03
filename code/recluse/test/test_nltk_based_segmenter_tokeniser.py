@@ -217,7 +217,7 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
     def test_commandline(self):
         segment_and_tokenise = subprocess.Popen(['python', 'recluse/nltk_based_segmenter_tokeniser.py'], stdin=-1, stdout=-1, stderr=-1)
         (stdoutdata, stderrdata) = segment_and_tokenise.communicate(input="this's a test\" and. so is 1984.")
-        self.assertEqual(segment_and_tokenise.returncode, 0)
+        self.assertEqual(segment_and_tokenise.returncode, 0, msg=stderrdata)
         self.assertEqual(stdoutdata, 'this\'s a test " and .\nso is <4-digit-integer> .\n'), stdoutdata
 
 
