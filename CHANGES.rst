@@ -1,6 +1,11 @@
 =========
 RECLUSE
 =========
+
+Release 0.1.21 (2013-10-03)
+..........................
+* data needed for testing should now be included.
+
 Release 0.1.20 (2013-10-03)
 ..........................
 * vocabulary_generator now writes a temporary bash script for srilm to call that invokes nltkbasedsegmentertokeniserrunner.

@@ -17,6 +17,7 @@ setup(name='recluse',
       url='https://github.com/lamber/recluse',
       scripts=['scripts/nltkbasedsegmentertokeniserrunner'],
       packages=['recluse', 'recluse.test'],
+      package_data={"recluse.test": ["data/*"]},
       license='COPYING',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass()
