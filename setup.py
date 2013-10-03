@@ -4,7 +4,7 @@ from distutils.core import setup
 import versioneer
 
 versioneer.versionfile_build='recluse/_version.py'
-versioneer.versionfile_source='code/recluse/_version.py'
+versioneer.versionfile_source='recluse/_version.py'
 versioneer.tag_prefix = 'recluse-'
 versioneer.parentdir_prefix = 'recluse-'
 
@@ -15,7 +15,7 @@ setup(name='recluse',
       author='L. Amber Wilcox-O\'Hearn',
       author_email='amber@cs.toronto.edu',
       url='https://github.com/lamber/recluse',
-      package_dir = {'':'code'},
+      scripts=['scripts/nltkbasedsegmentertokeniserrunner']
       packages=['recluse', 'recluse.test'],
       license='COPYING',
       version=versioneer.get_version(),
