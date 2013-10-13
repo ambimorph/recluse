@@ -1,6 +1,6 @@
 # test_utils.py
 
-import unittest, os, shutil
+import unittest, os, shutil, regex
 from recluse import utils
 
 
@@ -41,6 +41,17 @@ class UtilsTest(unittest.TestCase):
         first_line  = infile_obj.readline()
         self.assertEqual(first_line, u'holy 2\n'), first_line
         shutil.rmtree(temp_dir_name)
+
+    def test_partition_by_list(self):
+
+        s = u"This is a sentence I'd like to tokenise."
+        tokens = utils.partition_by_list(s, regex.findall(r'\p{P}|\p{S}|\p{Z}', s))
+        self.assertTupleEqual(tokens, (u'This', u' ', u'is', u' ', u'a', u' ', u'sentence', u' ', u'I', u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.')), tokens
+
+        s  = u'this'
+        p_list = ['th', 'is']
+        tokens  = utils.partition_by_list(s, p_list)
+        self.assertTupleEqual(tokens, ('th', 'is')), tokens
         
 
 if __name__ == '__main__':

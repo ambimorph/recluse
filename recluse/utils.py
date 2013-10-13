@@ -45,3 +45,24 @@ def split_file_into_chunks(file_name, directory, lines_per_chunk):
         current_file_number += 1
     return
 
+def partition_by_list(s, p_list):
+
+    """
+    Returns a tuple with the substrings of s partitioned around the
+    elements of p_list.  It is designed to be used with a
+    regex.findall in order to tokenise.
+
+    Example: 
+    >>> s = u"This is a sentence I'd like to tokenise."
+    >>> partition_by_list(s, regex.findall(r'\p{P}|\p{S}|\p{Z}', s))
+    (u'This', u' ', u'is', u' ', u'a', u' ', u'sentence', u' ', u'I',
+    u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.')
+    """
+
+    if s == '': return ()
+    if p_list == []: return (s,)
+    p = s.partition(p_list[0])
+    if p[0] == '': return (p[1],) + partition_by_list(p[2], p_list[1:])
+    if p[1] == '': return (p[0])
+    return (p[0], p[1]) + partition_by_list(p[2], p_list[1:])
+    
