@@ -2,57 +2,130 @@
 # NLTKBasedSegmenterTokeniser.py
 
 import nltk
-import re, sys, codecs, unicodedata, string
+import regex, sys, codecs, unicodedata, string
+from recluse import utils
+
+def subtokenise(token, abbreviation_list=[]):
+
+    """
+    Returns a tuple of disjoint, non-overlapping substrings that cover
+    the token string.
+
+    Subtokens are determined as follows:
+    All unicode punctuation characters are considered tokens except:
+
+    * Contractions will follow the convention of splitting into two
+    parts, the second of which keeps the apostrophe.
+
+    * Inter-numeric commas and periods stay token-internal.
+
+    * Ellipses composed of periods are kept together as a single token.
+
+    * Periods are kept on abbreviations, as given by the parameter,
+      and initials.
+
+    This function does not break strings on spaces.
+
+    Examples: "I'd" -> ("I", "'d"); "Mr." -> ("Mr", "."); "like" -> ("like",)
+    """
+    
+    if token[-1] == u'.':
+        if token[:-1].lower() in abbreviation_list or is_an_initial(token):
+            return (token,)
+
+    ellipses = r'\.\.\.'
+    number = r'\p{N}+(?:[,\.]\p{N}+)+'
+    contraction_part = r'(?<=\p{L})\'\p{L}+'
+    other_punctuation = r'\p{P}|\p{S}'
+    
+    two_problems = regex.compile(r'|'.join([ellipses, number, contraction_part, other_punctuation]))
+
+    return utils.partition_by_list(token, two_problems.findall(token))
+
+def regularise(token):
+
+    """
+    Returns a replacement token for the token when appropriate.
+    The only case in this version is replacing digit strings.
+    Example: "1984" -> "<4-digit-integer>"
+    """
+
+    def repl(matchobj): return u'<' + str(len(matchobj.group())) + u'-digit-integer>'
+    
+    return regex.sub(r'(\p{N}+)', repl, token)
+
+def sentence_tokenise_and_regularise(token_list, abbreviation_list=[]):
+
+    """
+    Returns the string formed by joining the regularised subtokens of
+    each token in the list by spaces.
+    Example: ["I'd", "like", "$150,000.00."] -> 
+    "I 'd like $ <3-digit-integer>,<3-digit-integer>.<2-digit-integer> ."
+    """
+
+    subtokens = []
+    for token in token_list:
+        these_subtokens = subtokenise(token, abbreviation_list)
+        for subtoken in these_subtokens:
+            subtokens.append(regularise(subtoken))
+    
+    return u' '.join(subtokens)
+
+
+def is_an_initial(word):
+
+    return len(word) == 2 and unicodedata.category(word[0])[0] == 'L' and word[1] == u'.'
+
+def is_multi_char_word_and_starts_with_a_capital(word):
+
+    return len(word) > 1 and unicodedata.category(word[0]) == 'Lu'
 
 class NLTKBasedSegmenterTokeniser():
 
     """
     This Segementer/Tokeniser is customised in the following ways:
 
-    1. It has parameters optimised for Wikipedia text (i.e. text that
-    is inconsistent in its spelling of abbreviations, has an immense
-    vocabulary, and is stylistically diverse and non-standard).
+    1. It has NLTK training parameters optimised for Wikipedia text
+    (i.e. text that is inconsistent in its spelling of abbreviations,
+    has an immense vocabulary, and is stylistically diverse and
+    non-standard), as recommended by NLTK developers.
 
     2. This version replaces strings of digits with a special string
     that has only a digit count. TODO: make this optional.
 
-    3. It has a mode that emits lists of boundary positions and token
-    replacements rather than putting out transformed text, in order to
-    preserve the original.  EXCEPTION: note that in this version
-    non-linebreaking whitespace is always collapsed to a single space,
-    however, which violates complete reversibility.
+    3. The tokenisation is almost completely reversible.  Tokenisation
+    results in a TokenisedSentence which can be used either to emit
+    tokens or to emit the original text stream.  EXCEPTION: note that
+    in this version non-linebreaking whitespace is always collapsed to
+    a single space, which violates complete reversibility.
 
     4. This version always starts by training on the supplied text.
     New text can also be supplied after the training (though this is
     not yet tested), but the training is not currenty loadable or
-    savable.
+    savable. TODO: allow loaded segmentation models.
 
     """
 
     def __init__(self, infile_obj):
+
+        """
+        Gets text and trains a segmenter with NLTK.
+        """
+
         self.unicode_infile_obj = codecs.getreader('utf-8')(infile_obj)
         self.text = self.unicode_infile_obj.read()
         assert isinstance(self.text, unicode)
         assert len(self.text) > 0
         trainer = nltk.tokenize.punkt.PunktTrainer()
-        # The following are optimisations recommended by NLTK
-        # developers for Wikipedia:
+        # Wikipedia optimisation:
         trainer.ABBREV = .15
         trainer.IGNORE_ABBREV_PENALTY = True
         trainer.INCLUDE_ALL_COLLOCS = True
         trainer.MIN_COLLOC_FREQ = 10
-        # ---------------------------------------------------
+        # -----------------------
         trainer.train(self.text)
         self.sbd = nltk.tokenize.punkt.PunktSentenceTokenizer(trainer.get_params())
 
-    def is_an_initial(self, word):
-        if len(word) == 2 and unicodedata.category(word[0])[0] == 'L' and word[1] == u'.':
-            return True
-        return False
-    def multi_char_word_and_starts_with_a_capital(self, word):
-        if len(word) > 1 and unicodedata.category(word[0]) == 'Lu':
-            return True
-        return False
 
     def apply_ugly_hack_to_reattach_wrong_splits_in_certain_cases_with_initials(self, lines):
         """
@@ -73,14 +146,14 @@ class NLTKBasedSegmenterTokeniser():
             first_word_of_next_line = next_line[0]
             if len(first_word_of_next_line) > 1 and unicodedata.category(first_word_of_next_line[0]) == 'Lu':
                 next_line_starts_with_a_capital = True
-            if self.is_an_initial(last_word):
+            if is_an_initial(last_word):
                 nltk_ortho_context = self.sbd._params.ortho_context[first_word_of_next_line.lower()]
                 if unicodedata.category(first_word_of_next_line[0])[0] != 'L':
                     reattach = True
                 # The following is an ugly and imperfect hack.  See mailing list for nltk.
-                elif self.multi_char_word_and_starts_with_a_capital(first_word_of_next_line) and \
+                elif is_multi_char_word_and_starts_with_a_capital(first_word_of_next_line) and \
                         nltk_ortho_context <= 46 or \
-                        self.is_an_initial(first_word_of_next_line):
+                        is_an_initial(first_word_of_next_line):
                     reattach = True
 
             if reattach:
@@ -91,156 +164,36 @@ class NLTKBasedSegmenterTokeniser():
             i += 1 
         reattached_lines.append(u' '.join(current_line))
         return reattached_lines
-                
-    def lists_of_internal_token_boundaries_and_special_tokens(self, line):
+
+    def sentence_segment(self, text=None, tokenise=True, lower=True):
+
         """
-        If any chars are unicode punctuation and not periods, put
-        boundary marks around them except at the beginning and end of
-        the line, and unless it is a contraction or an inter-numeric
-        comma.  Also put boundaries around ellipses.  Strings of
-        digits are listed in the substitutions list with
-        '<n-digit-integer>' I've traded some readability for doing it
-        in one pass.
+        This function returns a generator, to avoid storing massive
+        amounts of text in RAM.  If text is None, the training text
+        itself is segmented.  If tokenised is True, the sentences will
+        be in tokenised form, i.e. with spaces inserted at token and
+        subtoken boundaries, and digit strings replaced with special
+        tokens.  If lowered is True, the strings will be lower-cased.
         """
 
-        boundaries_set = set([])
-        special_tokens = []
-        digit_length = 0
-        number_punct = False
-        if unicodedata.category(line[0]) == 'Nd':
-            digit_length = 1
-        elif unicodedata.category(line[0])[0] in 'PS' and line[0] != '.':
-            boundaries_set.add(1)
-        for i in [x+1 for x in range(len(line)-1)]:
-            if unicodedata.category(line[i]) == 'Nd':
-                # We're in a digit string.
-                digit_length += 1
-            else:
-                if digit_length > 0:
-                    # Either there is a period or comma in the digit string or
-                    # this ends the digit string. 
-                    if (line[i] == '.' or line[i] == ',') and i < len(line)-1 and unicodedata.category(line[i+1]) =='Nd':
-                        number_punct = True
-                    special_tokens.append( (i - digit_length, digit_length,  u'<' + unicode(str(digit_length)) + u'-digit-integer>') )
-                    digit_length = 0
-                if unicodedata.category(line[i])[0] in 'PSZ' and line[i] != '.' and not number_punct:
-                    if (line[i] == '\'' or line[i] == u'\xb4') and unicodedata.category(line[i-1])[0] == 'L' \
-                        and i < len(line)-1 and unicodedata.category(line[i+1])[0] == 'L':
-                        pass
-                    else:
-                        boundaries_set.update([i, i+1])
-                number_punct = False
-        if digit_length != 0:
-            special_tokens.append( (len(line) - digit_length, digit_length,  u'<' + unicode(str(digit_length)) + u'-digit-integer>') )
-            
-        # Mark a boundary before sentence-final period if not an abbrevation
-        i = len(line) - 1
-        while unicodedata.category(line[i])[0] not in 'LN' and i >= 0:
-            i -= 1
-        if i >= 0:
-            if i != len(line) - 1 and line[i+1] == '.':
-                period_index = i+1
-                # See if preceding token is an abbreviation or initial.
-                while unicodedata.category(line[i]) != 'Zs' and i >= 0:
-                    i -= 1
-                token_index = i+1
-                abbreviations = self.sbd._params.abbrev_types
-                if line[token_index:period_index].lower() not in abbreviations and \
-                        not (token_index + 1 == period_index and unicodedata.category(line[token_index]) == 'Lu'):
-                    boundaries_set.add(period_index)
-
-        # Find ellipses
-        ellipses_index = line.find(u'...')
-        while ellipses_index != -1:
-            boundaries_set.add(ellipses_index)
-            ellipses_index = line.find(u'...', ellipses_index+1)
-
-        boundaries_set.discard(0)
-        boundaries_set.discard(len(line))
-        boundaries = list(boundaries_set)
-        boundaries.sort()
-        return boundaries, special_tokens
-
-    def tokenised_text(self, sentence_and_token_information):
-
-        text, boundaries, substitutions = sentence_and_token_information
-        current_index = 0
-        result = u''
-        if len(boundaries) == 0: next_boundary = None
-        else: 
-            next_boundary_index = 0
-            next_boundary = boundaries[0]
-        if len(substitutions) == 0: next_sub = None
-        else: 
-            next_sub_index = 0
-            next_sub, sub_length, sub_text = substitutions[0]
-
-        while next_boundary is not None or next_sub is not None:
-            while next_boundary is not None and (next_sub is None or next_boundary < next_sub):
-                result += text[current_index:next_boundary] + u' '
-                current_index = next_boundary
-                next_boundary_index += 1
-                if len(boundaries) < next_boundary_index + 1:
-                    next_boundary = None
-                else:
-                    next_boundary = boundaries[next_boundary_index]
-                if next_boundary is None and next_sub is None:
-                    result += text[current_index:]
-               
-            if next_boundary is not None and next_sub is not None and next_boundary == next_sub:
-                result += text[current_index:next_boundary] + u' ' + sub_text
-                current_index = next_sub + sub_length
-                next_boundary_index += 1
-                if len(boundaries) < next_boundary_index + 1:
-                    next_boundary = None
-                else:
-                    next_boundary = boundaries[next_boundary_index]
-                next_sub_index += 1
-                if len(substitutions) < next_sub_index + 1:
-                    next_sub = None
-                else:
-                    next_sub, sub_length, sub_text = substitutions[next_sub_index]
-                
-            while next_sub is not None and (next_boundary is None or next_sub < next_boundary):
-                result += text[current_index:next_sub] + sub_text
-                current_index = next_sub + sub_length
-                next_sub_index += 1
-                if len(substitutions) < next_sub_index + 1:
-                    next_sub = None
-                else:
-                    next_sub, sub_length, sub_text = substitutions[next_sub_index]
-        return result
-           
-                    
-
-    def segmented_and_tokenised(self, text=None, output_file_obj=None):
-        """
-        This function creates a generator, to avoid storing in RAM.
-        If text is not supplied, the training text itself is used.
-        If output_file_obj is supplied, the text is put out to that
-        file with spaces inserted at the boundaries, and digit strings
-        replaced with special tokens.
-        """
         assert text is None or isinstance(text, unicode), text
         if text == None: text = self.text
+        
         for line in (t for t in text.split('\n')):
             sentences = self.sbd.sentences_from_text(line, realign_boundaries=True)
             sentences = self.apply_ugly_hack_to_reattach_wrong_splits_in_certain_cases_with_initials(sentences)
             for sentence in sentences:
-                sentence_and_token_information = (sentence,) + self.lists_of_internal_token_boundaries_and_special_tokens(sentence)
-                yield sentence_and_token_information
-                if output_file_obj:
-                    unicode_outfile_obj = codecs.getwriter('utf-8')(output_file_obj)
-                    lowered_text = sentence_and_token_information[0].lower()
-                    lowered_sentence_and_token_information = (lowered_text, sentence_and_token_information[1], sentence_and_token_information[2])
-                    unicode_outfile_obj.write(u' '.join(self.tokenised_text(lowered_sentence_and_token_information).split()) + u'\n')
-        
+                if tokenise:
+                    sentence = sentence_tokenise_and_regularise(sentence.split(), abbreviation_list=self.sbd._params.abbrev_types)
+                if lower:
+                    sentence = sentence.lower()
+                yield sentence + '\n'
 
 def run_me():
     
     st = NLTKBasedSegmenterTokeniser(sys.stdin)
-    for sti in st.segmented_and_tokenised(output_file_obj=sys.stdout):
-        pass
+    for tokenised_sentence in st.sentence_segment():
+        sys.stdout.write(tokenised_sentence)
 
 
 if __name__ == '__main__':

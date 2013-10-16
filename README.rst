@@ -14,10 +14,14 @@ Recluse (Reproducible Experimentation for Computational Linguistics Use) is a se
 
 This version contains 
 
-* utils, which has a function for reading and writing unicode with regular or compressed text, and a function for splitting a file into smaller pieces.  The latter is needed for some tools that load everything into RAM, or train on all the data when we would be satisfied with training on partial data.
+* utils, which has three functions:
+** open_with_unicode for reading and writing unicode with regular or compressed text
+** split_file_into_chunks for splitting a file into smaller pieces.  This is needed for some tools that load everything into RAM, or train on all the data when we would be satisfied with training on partial data.
+** partition_by_list works like a combination of the string methods partition and split; it keeps the separators, but partitions into a list.
+
 * article_randomiser, which reproducibly randomly divides a corpus into training, development, and test sets.
 * nltk_based_segmenter_tokeniser, which does sentence segmentation and word tokenisation.
-  It is optimised for Wikipedia type text, and it has a mode that preserves the untokenised text (modulo extra whitespace).
+  It is optimised for Wikipedia type text.
 * vocabulary_generator and the helper class vocabulary_cutter.  This wraps srilm as it makes unigram counts, and then selects the most frequent.
 
 

@@ -2,6 +2,15 @@
 RECLUSE
 =========
 
+Release 0.2.0 (2013-10-16)
+..........................
+* Changed the interface to nltk_based_segmenter_tokeniser.  
+** It still can return a generator of sentences, and prints out tokenised segmented sentences when used on the commandline.
+** The generator now yields sentences in strings, either the original or the tokenised version
+** Methods for doing the tokenisation are provided separately.
+** This puts the burden of aligning tokenised text to original text in the client, while still allowing the client access to the information needed to do so.
+* There is a change in dealing with contractions; we now follow the convention of separating a contraction into two parts with the apostrophe attached to the second part.
+
 Release 0.1.21 (2013-10-03)
 ..........................
 * data needed for testing should now be included.
