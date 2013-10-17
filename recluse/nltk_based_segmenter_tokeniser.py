@@ -193,7 +193,7 @@ def run_me():
     
     st = NLTKBasedSegmenterTokeniser(sys.stdin)
     for tokenised_sentence in st.sentence_segment():
-        sys.stdout.write(tokenised_sentence)
+        sys.stdout.write(tokenised_sentence.encode('utf-8'))
 
 
 if __name__ == '__main__':

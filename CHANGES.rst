@@ -2,6 +2,11 @@
 RECLUSE
 =========
 
+Release 0.2.1 (2013-10-17)
+..........................
+* Fixed a unicode issue: the commandline version of the tokeniser must decode before sending to stdout.
+* Updated a regression test of vocabulary generator that had slightly different output based on changes to the tokenisation.
+
 Release 0.2.0 (2013-10-16)
 ..........................
 * Changed the interface to nltk_based_segmenter_tokeniser.  
