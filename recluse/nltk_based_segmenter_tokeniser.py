@@ -1,5 +1,4 @@
-# 2012 L. Amber Wilcox-O'Hearn
-# NLTKBasedSegmenterTokeniser.py
+# nltk_based_segmenter_tokeniser.py
 
 import nltk
 import regex, sys, codecs, unicodedata, string
