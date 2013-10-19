@@ -53,6 +53,22 @@ def regularise(token):
     
     return regex.sub(r'(\p{N}+)', repl, token)
 
+def list_subtokenise_and_regularise(token_list, abbreviation_list=[]):
+
+    """
+    Returns the regularised, subtokenised list of tokens.
+    Example: ["I'd", "like", "$150,000.00."] -> 
+    [('I', "'d"), ('like',), ('$',
+    '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.')]
+    """
+    
+    regularised_subtokenised_list = []
+    for token in token_list:
+        subtokens = tuple(regularise(s) for s in subtokenise(token, abbreviation_list))
+        regularised_subtokenised_list.append(subtokens)
+
+    return regularised_subtokenised_list
+
 def sentence_tokenise_and_regularise(token_list, abbreviation_list=[]):
 
     """
@@ -67,9 +83,8 @@ def sentence_tokenise_and_regularise(token_list, abbreviation_list=[]):
         these_subtokens = subtokenise(token, abbreviation_list)
         for subtoken in these_subtokens:
             subtokens.append(regularise(subtoken))
-    
-    return u' '.join(subtokens)
 
+    return u' '.join(subtokens)
 
 def is_an_initial(word):
 

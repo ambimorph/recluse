@@ -34,6 +34,13 @@ class TokeniserTest(unittest.TestCase):
         evals = [is_multi_char_word_and_starts_with_a_capital(t) for t in tokens]
         self.assertListEqual(evals, expected_evals), evals
 
+    def test_list_subtokenise_and_regularise(self):
+
+        token_list = ["I'd", "like", "$150,000.00."]
+        expected_list = [('I', "'d"), ('like',), ('$', '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.')]
+        result = list_subtokenise_and_regularise(token_list)
+        self.assertEqual(result, expected_list), result
+    
     def test_sentence_tokenise_and_regularise(self):
 
         token_list = ["I'd", "like", "$150,000.00."]
