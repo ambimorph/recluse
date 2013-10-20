@@ -46,12 +46,13 @@ class UtilsTest(unittest.TestCase):
 
         s = u"This is a sentence I'd like to tokenise."
         tokens = utils.partition_by_list(s, regex.findall(r'\p{P}|\p{S}|\p{Z}', s))
-        self.assertTupleEqual(tokens, (u'This', u' ', u'is', u' ', u'a', u' ', u'sentence', u' ', u'I', u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.')), tokens
+        self.assertListEqual(tokens, [u'This', u' ', u'is', u' ', u'a', u' ', u'sentence', u' ', u'I', u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.']), tokens
+        #self.assertTupleEqual(tokens, (u'This', u' ', u'is', u' ', u'a', u' ', u'sentence', u' ', u'I', u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.')), tokens
 
         s  = u'this'
         p_list = ['th', 'is']
         tokens  = utils.partition_by_list(s, p_list)
-        self.assertTupleEqual(tokens, ('th', 'is')), tokens
+        self.assertListEqual(tokens, ['th', 'is']), tokens
         
 
 if __name__ == '__main__':

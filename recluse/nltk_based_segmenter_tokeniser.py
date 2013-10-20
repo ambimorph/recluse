@@ -25,12 +25,12 @@ def subtokenise(token, abbreviation_list=[]):
 
     This function does not break strings on spaces.
 
-    Examples: "I'd" -> ("I", "'d"); "Mr." -> ("Mr", "."); "like" -> ("like",)
+    Examples: "I'd" -> ["I", "'d"]; "Mr." -> ["Mr", "."]; "like" -> ["like"]
     """
     
     if token[-1] == u'.':
         if token[:-1].lower() in abbreviation_list or is_an_initial(token):
-            return (token,)
+            return [token]
 
     ellipses = r'\.\.\.'
     number = r'\p{N}+(?:[,\.]\p{N}+)+'
@@ -58,13 +58,13 @@ def list_subtokenise_and_regularise(token_list, abbreviation_list=[]):
     """
     Returns the regularised, subtokenised list of tokens.
     Example: ["I'd", "like", "$150,000.00."] -> 
-    [('I', "'d"), ('like',), ('$',
-    '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.')]
+    [['I', "'d"], ['like'], ['$',
+    '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.']]
     """
     
     regularised_subtokenised_list = []
     for token in token_list:
-        subtokens = tuple(regularise(s) for s in subtokenise(token, abbreviation_list))
+        subtokens = [regularise(s) for s in subtokenise(token, abbreviation_list)]
         regularised_subtokenised_list.append(subtokens)
 
     return regularised_subtokenised_list

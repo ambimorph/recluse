@@ -59,10 +59,10 @@ def partition_by_list(s, p_list):
     u"'", u'd', u' ', u'like', u' ', u'to', u' ', u'tokenise', u'.')
     """
 
-    if s == '': return ()
-    if p_list == []: return (s,)
-    p = s.partition(p_list[0])
-    if p[0] == '': return (p[1],) + partition_by_list(p[2], p_list[1:])
-    if p[1] == '': return (p[0])
-    return (p[0], p[1]) + partition_by_list(p[2], p_list[1:])
+    if s == '': return []
+    if p_list == []: return [s]
+    p = list(s.partition(p_list[0]))
+    if p[0] == '': return [p[1],] + partition_by_list(p[2], p_list[1:])
+    if p[1] == '': return [p[0]]
+    return [p[0], p[1]] + partition_by_list(p[2], p_list[1:])
     

@@ -1,6 +1,9 @@
 =========
 RECLUSE
 =========
+Release 0.2.4 (2013-10-20)
+..........................
+* utils.partition_by_list now returns a list, not a tuple.
 
 Release 0.2.1 (2013-10-17)
 ..........................

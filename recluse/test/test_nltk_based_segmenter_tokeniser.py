@@ -9,7 +9,7 @@ class TokeniserTest(unittest.TestCase):
     def test_subtokenise(self):
 
         tokens = [u"I'd", u'Mr.', u'like', u"'that", u'150', u'150.', u'150,000.', u'$150,000.00.', u'L.']
-        expected_subtokens = [(u'I', u"'d"), (u'Mr', u'.'), (u'like',), (u"'", u'that'), (u'150',), (u'150', u'.'), (u'150,000', u'.'), (u'$', u'150,000.00', u'.'), (u'L.',)]
+        expected_subtokens = [[u'I', u"'d"], [u'Mr', u'.'], [u'like',], [u"'", u'that'], [u'150',], [u'150', u'.'], [u'150,000', u'.'], [u'$', u'150,000.00', u'.'], [u'L.',]]
         subtokens = [subtokenise(t) for t in tokens]
         self.assertListEqual(subtokens, expected_subtokens), subtokens
 
@@ -37,7 +37,7 @@ class TokeniserTest(unittest.TestCase):
     def test_list_subtokenise_and_regularise(self):
 
         token_list = ["I'd", "like", "$150,000.00."]
-        expected_list = [('I', "'d"), ('like',), ('$', '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.')]
+        expected_list = [['I', "'d"], ['like',], ['$', '<3-digit-integer>,<3-digit-integer>.<2-digit-integer>', '.']]
         result = list_subtokenise_and_regularise(token_list)
         self.assertEqual(result, expected_list), result
     
