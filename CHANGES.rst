@@ -1,6 +1,11 @@
 =========
 RECLUSE
 =========
+Release 0.3.0 (2013-10-25)
+..........................
+* utils now has a function to calculate precision, recall, and f-measure.
+
+
 Release 0.2.4 (2013-10-20)
 ..........................
 * utils.partition_by_list now returns a list, not a tuple.

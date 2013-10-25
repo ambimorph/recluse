@@ -66,3 +66,14 @@ def partition_by_list(s, p_list):
     if p[1] == '': return [p[0]]
     return [p[0], p[1]] + partition_by_list(p[2], p_list[1:])
     
+def precision_recall_f_measure(true_positives, false_positives, false_negatives):
+
+    if true_positives == 0:
+        precision = recall = f_measure = 0
+        
+    else:
+        precision = (0.0 + true_positives)/(true_positives + false_positives)
+        recall = (0.0 + true_positives)/(true_positives + false_negatives)
+        f_measure = (2 * precision * recall)/(precision + recall)
+
+    return (precision, recall, f_measure)

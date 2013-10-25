@@ -53,6 +53,35 @@ class UtilsTest(unittest.TestCase):
         p_list = ['th', 'is']
         tokens  = utils.partition_by_list(s, p_list)
         self.assertListEqual(tokens, ['th', 'is']), tokens
+
+    def test_precision_recall_f_measure(self):
+
+        true_positives, false_positives, false_negatives = 0, 2, 3
+        result = utils.precision_recall_f_measure(true_positives, false_positives, false_negatives)
+        self.assertTupleEqual(result, (0,0,0)), result
+
+        true_positives, false_positives, false_negatives = 2, 0, 0
+        result = utils.precision_recall_f_measure(true_positives, false_positives, false_negatives)
+        self.assertTupleEqual(result, (1,1,1)), result
+
+        true_positives, false_positives, false_negatives = 1, 2, 0
+        precision, recall, f_measure = utils.precision_recall_f_measure(true_positives, false_positives, false_negatives)
+        self.assertAlmostEqual(precision, 1.0/3.0), precision
+        self.assertAlmostEqual(recall, 1), recall
+        self.assertAlmostEqual(f_measure, 0.5), f_measure
+
+        true_positives, false_positives, false_negatives = 1, 0, 2
+        precision, recall, f_measure = utils.precision_recall_f_measure(true_positives, false_positives, false_negatives)
+        self.assertAlmostEqual(precision, 1), precision
+        self.assertAlmostEqual(recall, 1.0/3.0), recall
+        self.assertAlmostEqual(f_measure, 0.5), f_measure
+
+        true_positives, false_positives, false_negatives = 2, 3, 5
+        precision, recall, f_measure = utils.precision_recall_f_measure(true_positives, false_positives, false_negatives)
+        self.assertAlmostEqual(precision, 2.0/5.0), precision
+        self.assertAlmostEqual(recall, 2.0/7.0), recall
+        self.assertAlmostEqual(f_measure, 1.0/3.0), f_measure
+
         
 
 if __name__ == '__main__':
