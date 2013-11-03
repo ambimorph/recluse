@@ -10,7 +10,7 @@ Released under the GNU AFFERO GENERAL PUBLIC LICENSE, see COPYING file for detai
 Introduction
 ==============
 
-Recluse (Reproducible Experimentation for Computational Linguistics Use) is a set of tools for running computational linguistics experiments reproducibly.
+recluse (Reproducible Experimentation for Computational Linguistics USE) is a set of tools for running computational linguistics experiments reproducibly.
 
 This version contains 
 
@@ -26,11 +26,21 @@ This version contains
 * vocabulary_generator and the helper class vocabulary_cutter.  This wraps srilm as it makes unigram counts, and then selects the most frequent.
 
 
+============
+Dependencies
+============
+
+recluse depends on the pypi package `regex`_, which (unlike re) has unicode category support.
+
+    sudo pip install regex
+
 ==========
 Installing
 ==========
 
-Recluse is registered with pypi, so can be installed with pip:
+recluse is registered with pypi, so can be installed with pip:
 
     sudo pip install recluse
 
+
+.. _regex: https://pypi.python.org/pypi/regex/
