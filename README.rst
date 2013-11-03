@@ -20,6 +20,7 @@ This version contains
 ** partition_by_list works like a combination of the string methods partition and split; it keeps the separators, but partitions into a list.
 ** precision_recall_f_measure calculates those things.
 
+* article_selector (to replace article_randomiser below), reproducibly randomly selects a portion of a large corpus for the experiment, divides it into training, development, and test sets, and returns an article index to those sets.
 * article_randomiser, which reproducibly randomly divides a corpus into training, development, and test sets.
 * nltk_based_segmenter_tokeniser, which does sentence segmentation and word tokenisation.
   It is optimised for Wikipedia type text.

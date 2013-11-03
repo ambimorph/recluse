@@ -2,6 +2,10 @@
 RECLUSE
 =========
 
+Release 0.3.2 (2013-11-03)
+..........................
+* Made a new module article_selector, intended to replace article_randomiser.
+
 Release 0.3.1 (2013-11-03)
 ..........................
 * README has some dependency and installation information.
