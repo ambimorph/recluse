@@ -26,5 +26,11 @@ This version contains
 * vocabulary_generator and the helper class vocabulary_cutter.  This wraps srilm as it makes unigram counts, and then selects the most frequent.
 
 
+==========
+Installing
+==========
 
+Recluse is registered with pypi, so can be installed with pip:
+
+    sudo pip install recluse
 
