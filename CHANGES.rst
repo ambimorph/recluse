@@ -1,10 +1,14 @@
 =========
 RECLUSE
 =========
+
+Release 0.3.1 (2013-11-03)
+..........................
+* README has some dependency and installation information.
+
 Release 0.3.0 (2013-10-25)
 ..........................
 * utils now has a function to calculate precision, recall, and f-measure.
-
 
 Release 0.2.4 (2013-10-20)
 ..........................
