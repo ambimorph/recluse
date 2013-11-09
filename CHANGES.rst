@@ -2,6 +2,10 @@
 RECLUSE
 =========
 
+Release 0.4.0 (2013-11-08)
+..........................
+* nltk_based_segmenter_tokeniser can now read in a punkt object from prior work, for example, a pickled one.
+
 Release 0.3.2 (2013-11-03)
 ..........................
 * Made a new module article_selector, intended to replace article_randomiser.

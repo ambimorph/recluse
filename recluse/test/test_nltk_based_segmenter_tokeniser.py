@@ -1,7 +1,7 @@
 # test_nltk_based_segmenter_tokeniser.py
 
 from recluse.nltk_based_segmenter_tokeniser import *
-import unittest, StringIO, subprocess
+import unittest, StringIO, subprocess, cPickle
 
 
 class TokeniserTest(unittest.TestCase):
@@ -53,7 +53,7 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         training_text_file = open('recluse/test/data/segmenter_training', 'r')
-        self.segmenter_tokeniser = NLTKBasedSegmenterTokeniser(training_text_file)
+        self.segmenter_tokeniser = NLTKBasedSegmenterTokeniser(infile_obj=training_text_file)
 
     # These are essentially all regression tests.
 
@@ -163,6 +163,16 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
 
         text_to_segment_tokenise = 'The term "anarchism" derives from the Greek \xe1\xbc\x84\xce\xbd\xce\xb1\xcf\x81\xcf\x87\xce\xbf\xcf\x82, "anarchos", meaning "without rulers", from the prefix \xe1\xbc\x80\xce\xbd- ("an-", "without") + \xe1\xbc\x80\xcf\x81\xcf\x87\xce\xae ("arch\xc3\xaa", "sovereignty, realm, magistracy") + -\xce\xb9\xcf\x83\xce\xbc\xcf\x8c\xcf\x82 ("-ismos", from the suffix -\xce\xb9\xce\xb6\xce\xb5\xce\xb9\xce\xbd, "-izein" "-izing").\nHere\xc2\xa0are\xc2\xa0some\xc2\xa0\nNBSPs!'.decode('utf-8')
         expected_text_output = ['the term " anarchism " derives from the greek \xe1\xbc\x84\xce\xbd\xce\xb1\xcf\x81\xcf\x87\xce\xbf\xcf\x82 , " anarchos " , meaning " without rulers " , from the prefix \xe1\xbc\x80\xce\xbd - ( " an - " , " without " ) + \xe1\xbc\x80\xcf\x81\xcf\x87\xce\xae ( " arch\xc3\xaa " , " sovereignty , realm , magistracy " ) + - \xce\xb9\xcf\x83\xce\xbc\xcf\x8c\xcf\x82 ( " - ismos " , from the suffix - \xce\xb9\xce\xb6\xce\xb5\xce\xb9\xce\xbd , " - izein " " - izing " ) .\n', 'here are some\nnbsps !\n']
+
+
+class SegmenterAndTokeniserFromPickleTest(unittest.TestCase):
+
+    def test_get_punkt_from_pickle(self):
+
+        pickled_punkt = cPickle.load(open('recluse/test/data/pickled_punkt', 'r'))
+        segmenter_tokeniser = NLTKBasedSegmenterTokeniser(punkt_obj=pickled_punkt)
+        self.assertEqual(len(segmenter_tokeniser.sbd._params.abbrev_types), 56)
+
 
 
 if __name__ == '__main__':

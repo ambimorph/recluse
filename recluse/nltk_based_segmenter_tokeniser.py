@@ -120,25 +120,29 @@ class NLTKBasedSegmenterTokeniser():
 
     """
 
-    def __init__(self, infile_obj):
+    def __init__(self, infile_obj=None, punkt_obj=None):
 
         """
-        Gets text and trains a segmenter with NLTK.
+        Gets text and trains a segmenter with NLTK, or reads in
+        previously trained segmenter.
         """
 
-        self.unicode_infile_obj = codecs.getreader('utf-8')(infile_obj)
-        self.text = self.unicode_infile_obj.read()
-        assert isinstance(self.text, unicode)
-        assert len(self.text) > 0
-        trainer = nltk.tokenize.punkt.PunktTrainer()
-        # Wikipedia optimisation:
-        trainer.ABBREV = .15
-        trainer.IGNORE_ABBREV_PENALTY = True
-        trainer.INCLUDE_ALL_COLLOCS = True
-        trainer.MIN_COLLOC_FREQ = 10
-        # -----------------------
-        trainer.train(self.text)
-        self.sbd = nltk.tokenize.punkt.PunktSentenceTokenizer(trainer.get_params())
+        assert (infile_obj is None) ^ (punkt_obj is None)
+        if infile_obj is not None:
+            self.unicode_infile_obj = codecs.getreader('utf-8')(infile_obj)
+            self.text = self.unicode_infile_obj.read()
+            assert len(self.text) > 0
+            trainer = nltk.tokenize.punkt.PunktTrainer()
+            # Wikipedia optimisation:
+            trainer.ABBREV = .15
+            trainer.IGNORE_ABBREV_PENALTY = True
+            trainer.INCLUDE_ALL_COLLOCS = True
+            trainer.MIN_COLLOC_FREQ = 10
+            # -----------------------
+            trainer.train(self.text)
+            self.sbd = nltk.tokenize.punkt.PunktSentenceTokenizer(trainer.get_params())
+        else:
+            self.sbd = punkt_obj
 
 
     def apply_ugly_hack_to_reattach_wrong_splits_in_certain_cases_with_initials(self, lines):
