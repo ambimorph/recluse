@@ -2,6 +2,10 @@
 RECLUSE
 =========
 
+Release 0.4.1 (2013-11-09)
+..........................
+* Refined the nltk_based_segmenter_tokeniser punkt object option; the punkt_obj must be an sbd attribute of an nltk.tokenise.punkt.PunktSentenceTokenizer.
+
 Release 0.4.0 (2013-11-08)
 ..........................
 * nltk_based_segmenter_tokeniser can now read in a punkt object from prior work, for example, a pickled one.

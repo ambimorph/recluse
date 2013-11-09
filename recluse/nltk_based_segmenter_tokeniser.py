@@ -125,6 +125,9 @@ class NLTKBasedSegmenterTokeniser():
         """
         Gets text and trains a segmenter with NLTK, or reads in
         previously trained segmenter.
+
+        A punkt_obj is an sbd attribute of an
+        nltk.tokenise.punkt.PunktSentenceTokenizer.
         """
 
         assert (infile_obj is None) ^ (punkt_obj is None)

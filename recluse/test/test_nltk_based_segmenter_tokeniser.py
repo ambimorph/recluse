@@ -165,13 +165,11 @@ class SegmenterAndTokeniserTest(unittest.TestCase):
         expected_text_output = ['the term " anarchism " derives from the greek \xe1\xbc\x84\xce\xbd\xce\xb1\xcf\x81\xcf\x87\xce\xbf\xcf\x82 , " anarchos " , meaning " without rulers " , from the prefix \xe1\xbc\x80\xce\xbd - ( " an - " , " without " ) + \xe1\xbc\x80\xcf\x81\xcf\x87\xce\xae ( " arch\xc3\xaa " , " sovereignty , realm , magistracy " ) + - \xce\xb9\xcf\x83\xce\xbc\xcf\x8c\xcf\x82 ( " - ismos " , from the suffix - \xce\xb9\xce\xb6\xce\xb5\xce\xb9\xce\xbd , " - izein " " - izing " ) .\n', 'here are some\nnbsps !\n']
 
 
-class SegmenterAndTokeniserFromPickleTest(unittest.TestCase):
-
     def test_get_punkt_from_pickle(self):
 
-        pickled_punkt = cPickle.load(open('recluse/test/data/pickled_punkt', 'r'))
-        segmenter_tokeniser = NLTKBasedSegmenterTokeniser(punkt_obj=pickled_punkt)
-        self.assertEqual(len(segmenter_tokeniser.sbd._params.abbrev_types), 56)
+        pickled_punkt = cPickle.loads(cPickle.dumps(self.segmenter_tokeniser.sbd))
+        new_segmenter_tokeniser = NLTKBasedSegmenterTokeniser(punkt_obj=pickled_punkt)
+        self.assertEqual(len(new_segmenter_tokeniser.sbd._params.abbrev_types), 56)
 
 
 
