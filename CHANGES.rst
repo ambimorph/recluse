@@ -2,6 +2,10 @@
 RECLUSE
 =========
 
+Release 0.4.2 (2013-11-11)
+..........................
+* Refined the vocabulary_cutter and vocabulary_generator so they can optionally use a frequency cutoff instead of a size.
+
 Release 0.4.1 (2013-11-09)
 ..........................
 * Refined the nltk_based_segmenter_tokeniser punkt object option; the punkt_obj must be an sbd attribute of an nltk.tokenise.punkt.PunktSentenceTokenizer.
