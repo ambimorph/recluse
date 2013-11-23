@@ -50,7 +50,12 @@ class VocabularyGenerator():
         cutter = vocabulary_cutter.VocabularyCutter(unigram_counts_file_obj, vocabulary_file_obj)
         cutter.cut_vocabulary(n=size, min_frequency=min_frequency)
         
-        shutil.rmtree(temporary_directory)
+        try:
+            shutil.rmtree(temporary_directory)
+        except OSError:
+            for f in os.listdir(temporary_directory):
+                os.remove(temporary_directory + '/' + f)
+            shutil.rmtree(temporary_directory)
 
 
 if __name__ == '__main__':

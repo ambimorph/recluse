@@ -2,6 +2,11 @@
 RECLUSE
 =========
 
+Release 0.4.3 (2013-11-23)
+..........................
+* Wrapped the shutil.rmtree in vocabulary_generator in case of errors due to timing effects of .nsf files.
+
+
 Release 0.4.2 (2013-11-11)
 ..........................
 * Refined the vocabulary_cutter and vocabulary_generator so they can optionally use a frequency cutoff instead of a size.
