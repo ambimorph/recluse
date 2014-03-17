@@ -46,7 +46,7 @@ class VocabularyGenerator():
             os.mkdir(temporary_directory)
         self.srilm_make_merge_batch_counts(temporary_directory)
         merged_counts_file = [f for f in os.listdir(temporary_directory) if f.endswith('.ngrams.gz')][0]
-        unigram_counts_file_obj = open_with_unicode(temporary_directory + merged_counts_file, 'gzip', 'r')
+        unigram_counts_file_obj = open_with_unicode(temporary_directory + merged_counts_file, 'r', 'gzip')
         cutter = vocabulary_cutter.VocabularyCutter(unigram_counts_file_obj, vocabulary_file_obj)
         cutter.cut_vocabulary(n=size, min_frequency=min_frequency)
         

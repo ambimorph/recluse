@@ -2,10 +2,14 @@
 RECLUSE
 =========
 
+Release 0.4.4 (2014-03-17)
+..........................
+* NON-BACKWARDS-COMPATIBLE change to open_with_unicode parameters: now compression_type is a keyword argument; when left out, transparently falls back to opening with no compression, and matches the interface of regular Python open.
+* Cleaned up a lot redundancy in open_with_unicode (Thank you, Allison Kaptur!)
+
 Release 0.4.3 (2013-11-23)
 ..........................
 * Wrapped the shutil.rmtree in vocabulary_generator in case of errors due to timing effects of .nsf files.
-
 
 Release 0.4.2 (2013-11-11)
 ..........................

@@ -8,17 +8,17 @@ class UtilsTest(unittest.TestCase):
 
     def test_open_with_unicode(self):
 
-        infile_obj = utils.open_with_unicode('recluse/test/data/segmenter_training', None, 'r')
+        infile_obj = utils.open_with_unicode('recluse/test/data/segmenter_training', 'r')
         first_line = infile_obj.readline()
         self.assertEqual(first_line, u'\n'), first_line
         self.assertEqual(type(first_line), unicode), type(first_line)
 
-        infile_obj = utils.open_with_unicode('recluse/test/data/small_westbury.txt.bz2', 'bzip2', 'r')
+        infile_obj = utils.open_with_unicode('recluse/test/data/small_westbury.txt.bz2', 'r', 'bzip2')
         first_line = infile_obj.readline()
         self.assertEqual(first_line, u'Anarchism.\n'), first_line
         self.assertEqual(type(first_line), unicode), type(first_line)
 
-        infile_obj = utils.open_with_unicode('recluse/test/data/unigram_counts.gz', 'gzip', 'r')
+        infile_obj = utils.open_with_unicode('recluse/test/data/unigram_counts.gz', 'r', 'gzip')
         first_line = infile_obj.readline()
         self.assertEqual(first_line, u'funeral 4\n'), first_line
         self.assertEqual(type(first_line), unicode), type(first_line)
@@ -37,7 +37,7 @@ class UtilsTest(unittest.TestCase):
         self.assertTrue(os.path.isfile(temp_dir_name + '/002.bz2'))
         self.assertTrue(os.path.isfile(temp_dir_name + '/003.bz2'))
         self.assertTrue(os.path.isfile(temp_dir_name + '/004.bz2'))
-        infile_obj = utils.open_with_unicode(temp_dir_name + '/003.bz2', 'bzip2', 'r')
+        infile_obj = utils.open_with_unicode(temp_dir_name + '/003.bz2', 'r', 'bzip2')
         first_line  = infile_obj.readline()
         self.assertEqual(first_line, u'holy 2\n'), first_line
         shutil.rmtree(temp_dir_name)
